@@ -2,8 +2,8 @@ package matt.auto.interapp
 
 import matt.json.lang.get
 import matt.json.prim.parseJson
+import matt.kjlib.byte.readWithTimeout
 import matt.kjlib.commons.VAL_JSON
-import matt.kjlib.readWithTimeout
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader

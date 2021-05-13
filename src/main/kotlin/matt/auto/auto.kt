@@ -77,8 +77,6 @@ object SublimeText {
 }
 
 
-
-
 object Finder {
   fun open(f: File) = Desktop.getDesktop().open(if (f.isDirectory) f else f.parentFile)
   fun open(f: String) = open(File(f))
@@ -93,3 +91,11 @@ class WebBrowser(val name: String) {
 val VIVALDI = WebBrowser("Vivaldi")
 val CHROME = WebBrowser("Chrome")
 
+fun activateByPid(pid: Any) = osascript(
+  """
+        tell application "System Events"
+            set frontmost of the first process whose unix id is $pid to true
+        end tell
+""",
+  nonblocking = true
+)

@@ -60,11 +60,11 @@ fun applescript(script: String, nonblocking: Boolean = false) = osascript(script
 fun osascript(script: String, nonblocking: Boolean = false): String? {
   return if (nonblocking) {
 	thread {
-	  exec(null, "osascript", "-matt.kjlib.jmath.e", script)
+	  exec(null, "osascript", "-e", script)
 	}
 	null
   } else {
-	execReturn(null, "osascript", "-matt.kjlib.jmath.e", script)
+	execReturn(null, "osascript", "-e", script)
   }
 
 }

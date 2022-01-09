@@ -4,15 +4,14 @@ import matt.auto.interapp.InterAppInterface
 import matt.kjlib.commons.ROOT_FOLDER
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
+import matt.kjlib.shell.proc
 import java.awt.Desktop
 import java.io.File
 import java.net.URI
 import java.net.URL
 import java.util.Base64
 import kotlin.concurrent.thread
-import kotlin.contracts.ExperimentalContracts
 
-@ExperimentalContracts
 fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): ProcessBuilder {
   val args = mutableListOf(
 	ROOT_FOLDER.resolve("bin/ide_open").absolutePath,
@@ -27,7 +26,6 @@ fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): Proce
   )
 }
 
-@ExperimentalContracts
 fun File.openInIntelliJ() = IntelliJNavAction(absolutePath).start()
 
 fun URL.open() = InterAppInterface["webd"].open(this.toString())
@@ -56,17 +54,35 @@ fun kmscript(
 }
 
 @Suppress("unused")
-fun applescript(script: String, nonblocking: Boolean = false) = osascript(script, nonblocking)
-fun osascript(script: String, nonblocking: Boolean = false): String? {
-  return if (nonblocking) {
-	thread {
-	  exec(null, "osascript", "-e", script)
-	}
-	null
-  } else {
-	execReturn(null, "osascript", "-e", script)
-  }
+fun applescript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true) =
+  osascript(script, args, compiled)
 
+fun osascript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true): String {
+  val realScript = "on run argv\n$script\nend run"
+  if (compiled) {
+	/*var f = scptMap[realScript]
+	if (f == null) {
+	  val scpt = TEMP_DIR["scpt"].apply { mkdirs() }[]
+	  exec(null,"osacompile","-e",realScript,"-o")
+	}*/
+	return execReturn(null, "osascript", "-e", realScript, *args)
+  } else {
+	return execReturn(null, "osascript", "-e", realScript, *args)
+  }
+}
+
+fun interactiveOsascript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true): Process {
+  val realScript = "on run argv\n$script\nend run"
+  if (compiled) {
+	/*var f = scptMap[realScript]
+	if (f == null) {
+	  val scpt = TEMP_DIR["scpt"].apply { mkdirs() }[]
+	  exec(null,"osacompile","-e",realScript,"-o")
+	}*/
+	return proc(null, "osascript", "-e", realScript, *args)
+  } else {
+	return proc(null, "osascript", "-e", realScript, *args)
+  }
 }
 
 
@@ -91,11 +107,12 @@ class WebBrowser(val name: String) {
 val VIVALDI = WebBrowser("Vivaldi")
 val CHROME = WebBrowser("Chrome")
 
-fun activateByPid(pid: Any) = osascript(
-  """
+fun activateByPid(pid: Any) = thread {
+  osascript(
+	"""
         tell application "System Events"
             set frontmost of the first process whose unix id is $pid to true
         end tell
-""",
-  nonblocking = true
-)
+"""
+  )
+}

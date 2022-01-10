@@ -2,10 +2,12 @@ package matt.auto
 
 import matt.auto.interapp.InterAppInterface
 import matt.kjlib.commons.ROOT_FOLDER
+import matt.kjlib.file.get
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.proc
 import java.awt.Desktop
+import java.io.BufferedWriter
 import java.io.File
 import java.net.URI
 import java.net.URL
@@ -53,6 +55,17 @@ fun kmscript(
   println("not sure what to do with nonblocking in kotlin")
 }
 
+val APPLESCRIPT_FOLDER = ROOT_FOLDER["applescript"].apply { mkdirs() }
+fun compileAndOrRunApplescript(name: String, vararg args: String): String {
+  val scpt = APPLESCRIPT_FOLDER["$name.scpt"]
+  println("WARNING: eventually use a .json to track compile time with modification times, for now need to manually delete .scpt files to update")
+  val aScript = APPLESCRIPT_FOLDER["$name.applescript"]
+  if (!scpt.exists()) {
+	println("COMPILE:" + execReturn(null, "osacompile", "-o", scpt.absolutePath, aScript.absolutePath))
+  }
+  return execReturn(null, "osascript", scpt.absolutePath, *args)
+}
+
 @Suppress("unused")
 fun applescript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true) =
   osascript(script, args, compiled)
@@ -71,17 +84,22 @@ fun osascript(script: String, args: Array<String> = arrayOf(), compiled: Boolean
   }
 }
 
-fun interactiveOsascript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true): Process {
-  val realScript = "on run argv\n$script\nend run"
+fun interactiveOsascript(script: String, compiled: Boolean = true): Pair<BufferedWriter, Process> {
   if (compiled) {
 	/*var f = scptMap[realScript]
 	if (f == null) {
 	  val scpt = TEMP_DIR["scpt"].apply { mkdirs() }[]
 	  exec(null,"osacompile","-e",realScript,"-o")
 	}*/
-	return proc(null, "osascript", "-e", realScript, *args)
+	val p = proc(null, "bash", "-c", "osascript 3<&0 <<'APPLESCRIPT'")
+	val writer = p.outputStream.bufferedWriter()
+	writer.write("$script\nAPPLESCRIPT")
+	return writer to p
   } else {
-	return proc(null, "osascript", "-e", realScript, *args)
+	val p = proc(null, "bash", "-c", "osascript 3<&0 <<'APPLESCRIPT'")
+	val writer = p.outputStream.bufferedWriter()
+	writer.write("$script\nAPPLESCRIPT")
+	return writer to p
   }
 }
 

@@ -39,8 +39,8 @@ class Sender(
 		InputStreamReader(kkSocket.getInputStream())
 	  )
 	  if (use_sem) sem.acquire()
-	  /*out.println(message)*/
-	  out.print(message.trim())
+	  out.println(message)
+	  /*out.print(message.trim())*/
 	  response = inReader.readWithTimeout(2000)
 	  kkSocket.close()
 	} catch (e: ConnectException) {

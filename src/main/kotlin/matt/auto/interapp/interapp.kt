@@ -44,7 +44,7 @@ class Sender(
 	  response = inReader.readWithTimeout(2000)
 	  kkSocket.close()
 	} catch (e: ConnectException) {
-	  println(e.message)
+	  println(e)
 	  if (use_sem) sem.release()
 	  return null
 	}

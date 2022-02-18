@@ -6,6 +6,7 @@ import matt.kjlib.file.get
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.proc
+import matt.reflect.isNewMac
 import java.awt.Desktop
 import java.io.BufferedWriter
 import java.io.File
@@ -16,8 +17,7 @@ import kotlin.concurrent.thread
 
 fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): ProcessBuilder {
   val args = mutableListOf(
-	ROOT_FOLDER.resolve("bin/ide_open").absolutePath,
-	file
+	ROOT_FOLDER.resolve("bin/ide_open").absolutePath, file
   )
   if (linenum_or_searchstring != null) {
 	val encoded = Base64.getUrlEncoder().encodeToString(linenum_or_searchstring.toString().toByteArray())
@@ -36,8 +36,7 @@ val desktop: Desktop = Desktop.getDesktop()
 
 @Suppress("unused")
 fun kmscript(
-  id: String,
-  param: String? = null
+  id: String, param: String? = null
 ) {
   val url = if (param == null) {
 	"kmtrigger://macro=$id"
@@ -58,7 +57,9 @@ fun kmscript(
 val APPLESCRIPT_FOLDER = ROOT_FOLDER["applescript"].apply { mkdirs() }
 fun compileAndOrRunApplescript(name: String, vararg args: String): String {
   val scpt = APPLESCRIPT_FOLDER["$name.scpt"]
-  println("WARNING: eventually use a .json to track compile time with modification times, for now need to manually delete .scpt files to update")
+  println(
+	"WARNING: eventually use a .json to track compile time with modification times, for now need to manually delete .scpt files to update"
+  )
   val aScript = APPLESCRIPT_FOLDER["$name.applescript"]
   if (!scpt.exists()) {
 	println("COMPILE:" + execReturn(null, "osacompile", "-o", scpt.absolutePath, aScript.absolutePath))
@@ -72,8 +73,7 @@ fun applescript(script: String, args: Array<String> = arrayOf(), compiled: Boole
 
 fun osascript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true): String {
   val realScript = "on run argv\n$script\nend run"
-  if (compiled) {
-	/*var f = scptMap[realScript]
+  if (compiled) {	/*var f = scptMap[realScript]
 	if (f == null) {
 	  val scpt = TEMP_DIR["scpt"].apply { mkdirs() }[]
 	  exec(null,"osacompile","-e",realScript,"-o")
@@ -85,8 +85,7 @@ fun osascript(script: String, args: Array<String> = arrayOf(), compiled: Boolean
 }
 
 fun interactiveOsascript(script: String, compiled: Boolean = true): Pair<BufferedWriter, Process> {
-  if (compiled) {
-	/*var f = scptMap[realScript]
+  if (compiled) {	/*var f = scptMap[realScript]
 	if (f == null) {
 	  val scpt = TEMP_DIR["scpt"].apply { mkdirs() }[]
 	  exec(null,"osacompile","-e",realScript,"-o")
@@ -106,7 +105,8 @@ fun interactiveOsascript(script: String, compiled: Boolean = true): Pair<Buffere
 
 object SublimeText {
   fun open(file: File) {
-	exec(null, "/usr/local/bin/subl", file.absolutePath)
+	val subl = if (isNewMac) "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" else "/usr/local/bin/subl"
+	exec(null, subl, file.absolutePath)
   }
 }
 

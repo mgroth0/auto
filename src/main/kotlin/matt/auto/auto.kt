@@ -1,7 +1,7 @@
 package matt.auto
 
 import matt.auto.interapp.InterAppInterface
-import matt.kjlib.commons.ROOT_FOLDER
+import matt.kjlib.commons.FLOW_FOLDER
 import matt.kjlib.file.get
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
@@ -17,7 +17,7 @@ import kotlin.concurrent.thread
 
 fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): ProcessBuilder {
   val args = mutableListOf(
-	ROOT_FOLDER.resolve("bin/ide_open").absolutePath, file
+	FLOW_FOLDER.resolve("bin/ide_open").absolutePath, file
   )
   if (linenum_or_searchstring != null) {
 	val encoded = Base64.getUrlEncoder().encodeToString(linenum_or_searchstring.toString().toByteArray())
@@ -54,7 +54,7 @@ fun kmscript(
   println("not sure what to do with nonblocking in kotlin")
 }
 
-val APPLESCRIPT_FOLDER = ROOT_FOLDER["applescript"].apply { mkdirs() }
+val APPLESCRIPT_FOLDER = FLOW_FOLDER["applescript"].apply { mkdirs() }
 fun compileAndOrRunApplescript(name: String, vararg args: String): String {
   val scpt = APPLESCRIPT_FOLDER["$name.scpt"]
   println(

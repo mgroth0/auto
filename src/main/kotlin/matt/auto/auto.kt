@@ -68,11 +68,14 @@ fun compileAndOrRunApplescript(name: String, vararg args: String): String {
 }
 
 @Suppress("unused")
-fun applescript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true) =
-  osascript(script, args, compiled)
+fun applescript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true, functions: String = "") =
+  osascript(script, args, compiled,functions=functions)
 
-fun osascript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true): String {
-  val realScript = "on run argv\n$script\nend run"
+fun osascript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true,functions: String = ""): String {
+  var realScript = "on run argv\n$script\nend run"
+  if (functions.isNotBlank()) {
+	realScript = realScript  + "\n\n" + functions
+  }
   if (compiled) {	/*var f = scptMap[realScript]
 	if (f == null) {
 	  val scpt = TEMP_DIR["scpt"].apply { mkdirs() }[]

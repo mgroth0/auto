@@ -29,7 +29,7 @@ fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): Proce
 }
 
 fun File.openInIntelliJ() = IntelliJNavAction(absolutePath).start()
-fun File.openInFinder() = desktop.browse(this.toURI())
+fun File.openInFinder(): Unit = if (this.isDirectory) desktop.browse(this.toURI()) else this.parentFile.openInFinder()
 
 fun URL.open() = InterAppInterface["webd"].open(this.toString())
 
@@ -70,14 +70,19 @@ fun compileAndOrRunApplescript(name: String, vararg args: String): String {
 
 @Suppress("unused")
 fun applescript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true, functions: String = "") =
-  osascript(script, args, compiled,functions=functions)
+  osascript(script, args, compiled, functions = functions)
 
-fun osascript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true,functions: String = ""): String {
+fun osascript(
+  script: String,
+  args: Array<String> = arrayOf(),
+  compiled: Boolean = true,
+  functions: String = ""
+): String {
   var realScript = "on run argv\n$script\nend run"
   if (functions.isNotBlank()) {
-	realScript = realScript  + "\n\n" + functions
+	realScript = realScript + "\n\n" + functions
   }
-  if (compiled) {	/*var f = scptMap[realScript]
+  if (compiled) {    /*var f = scptMap[realScript]
 	if (f == null) {
 	  val scpt = TEMP_DIR["scpt"].apply { mkdirs() }[]
 	  exec(null,"osacompile","-e",realScript,"-o")
@@ -89,7 +94,7 @@ fun osascript(script: String, args: Array<String> = arrayOf(), compiled: Boolean
 }
 
 fun interactiveOsascript(script: String, compiled: Boolean = true): Pair<BufferedWriter, Process> {
-  if (compiled) {	/*var f = scptMap[realScript]
+  if (compiled) {    /*var f = scptMap[realScript]
 	if (f == null) {
 	  val scpt = TEMP_DIR["scpt"].apply { mkdirs() }[]
 	  exec(null,"osacompile","-e",realScript,"-o")

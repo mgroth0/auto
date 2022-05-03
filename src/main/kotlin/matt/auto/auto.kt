@@ -29,6 +29,7 @@ fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): Proce
 }
 
 fun File.openInIntelliJ() = IntelliJNavAction(absolutePath).start()
+fun File.openInFinder() = desktop.browse(this.toURI())
 
 fun URL.open() = InterAppInterface["webd"].open(this.toString())
 

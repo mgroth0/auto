@@ -3,9 +3,11 @@ package matt.auto
 import matt.auto.interapp.InterAppInterface
 import matt.kjlib.commons.FLOW_FOLDER
 import matt.kjlib.file.get
+import matt.kjlib.log.exceptionFolder
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.proc
+import matt.klib.log.warn
 import matt.reflect.isNewMac
 import java.awt.Desktop
 import java.io.BufferedWriter
@@ -14,6 +16,14 @@ import java.net.URI
 import java.net.URL
 import java.util.Base64
 import kotlin.concurrent.thread
+
+fun writeErrReport(name: String, report: String) {
+  exceptionFolder.mkdirs()
+  val file = exceptionFolder["$name.txt"]
+  warn("writing error report to $file")
+  file.writeText(report)
+  SublimeText.open(file)
+}
 
 fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): ProcessBuilder {
   val args = mutableListOf(

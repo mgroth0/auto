@@ -4,6 +4,7 @@ import matt.auto.interapp.InterAppInterface
 import matt.kjlib.commons.FLOW_FOLDER
 import matt.kjlib.file.get
 import matt.kjlib.log.exceptionFolder
+import matt.kjlib.shell.allStdOutAndStdErr
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.proc
@@ -38,7 +39,7 @@ fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): Proce
   )
 }
 
-fun File.openInIntelliJ() = IntelliJNavAction(absolutePath).start()
+fun File.openInIntelliJ() = thread { println(IntelliJNavAction(absolutePath).start().allStdOutAndStdErr()) }
 fun File.openInFinder(): Unit = if (this.isDirectory) desktop.browse(this.toURI()) else this.parentFile.openInFinder()
 
 fun URL.open() = InterAppInterface["webd"].open(this.toString())

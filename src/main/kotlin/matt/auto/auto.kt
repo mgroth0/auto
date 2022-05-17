@@ -41,6 +41,11 @@ fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): Proce
 
 fun File.openInIntelliJ() = thread { println(IntelliJNavAction(absolutePath).start().allStdOutAndStdErr()) }
 fun File.openInFinder(): Unit = if (this.isDirectory) desktop.browse(this.toURI()) else this.parentFile.openInFinder()
+fun File.openInSublime() = SublimeText.open(this)
+fun File.subl() = openInSublime()
+
+@JvmName("subl1")
+fun subl(file: File) = file.subl()
 
 fun URL.open() = InterAppInterface["webd"].open(this.toString())
 

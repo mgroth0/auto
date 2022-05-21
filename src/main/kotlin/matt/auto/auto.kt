@@ -1,15 +1,15 @@
 package matt.auto
 
-import matt.auto.interapp.InterAppInterface
-import matt.kjlib.commons.FLOW_FOLDER
+import matt.kbuild.FLOW_FOLDER
+import matt.kbuild.InterAppInterface
+import matt.kbuild.allStdOutAndStdErr
+import matt.kbuild.isNewMac
+import matt.kbuild.proc
 import matt.kjlib.file.get
 import matt.kjlib.log.exceptionFolder
-import matt.kjlib.shell.allStdOutAndStdErr
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
-import matt.kjlib.shell.proc
 import matt.klib.log.warn
-import matt.reflect.isNewMac
 import java.awt.Desktop
 import java.io.BufferedWriter
 import java.io.File

@@ -1,10 +1,10 @@
 package matt.auto
 
 import matt.kbuild.FLOW_FOLDER
-import matt.kbuild.InterAppInterface
 import matt.kbuild.allStdOutAndStdErr
 import matt.kbuild.isNewMac
 import matt.kbuild.proc
+import matt.kbuild.socket.InterAppInterface
 import matt.kjlib.file.get
 import matt.kjlib.log.exceptionFolder
 import matt.kjlib.shell.exec

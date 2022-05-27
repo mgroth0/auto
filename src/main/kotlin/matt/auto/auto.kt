@@ -4,11 +4,11 @@ import matt.kbuild.allStdOutAndStdErr
 import matt.kbuild.isNewMac
 import matt.kbuild.proc
 import matt.kjlib.commons.FLOW_FOLDER
-import matt.kjlib.commons.InterAppInterface
 import matt.kjlib.file.get
 import matt.kjlib.log.exceptionFolder
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
+import matt.kjlib.socket.InterAppInterface
 import matt.klib.log.warn
 import java.awt.Desktop
 import java.io.BufferedWriter

@@ -1,10 +1,10 @@
 package matt.auto
 
-import matt.kbuild.FLOW_FOLDER
 import matt.kbuild.allStdOutAndStdErr
 import matt.kbuild.isNewMac
 import matt.kbuild.proc
-import matt.kbuild.socket.InterAppInterface
+import matt.kjlib.commons.FLOW_FOLDER
+import matt.kjlib.commons.InterAppInterface
 import matt.kjlib.file.get
 import matt.kjlib.log.exceptionFolder
 import matt.kjlib.shell.exec
@@ -28,7 +28,7 @@ fun writeErrReport(name: String, report: String) {
 
 fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): ProcessBuilder {
   val args = mutableListOf(
-	FLOW_FOLDER.resolve("bin/ide_open").absolutePath, file
+	FLOW_FOLDER!!.resolve("bin/ide_open").absolutePath, file
   )
   if (linenum_or_searchstring != null) {
 	val encoded = Base64.getUrlEncoder().encodeToString(linenum_or_searchstring.toString().toByteArray())
@@ -71,7 +71,7 @@ fun kmscript(
   println("not sure what to do with nonblocking in kotlin")
 }
 
-val APPLESCRIPT_FOLDER = FLOW_FOLDER["applescript"].apply { mkdirs() }
+val APPLESCRIPT_FOLDER = FLOW_FOLDER!!["applescript"].apply { mkdirs() }
 fun compileAndOrRunApplescript(name: String, vararg args: String): String {
   val scpt = APPLESCRIPT_FOLDER["$name.scpt"]
   println(

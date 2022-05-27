@@ -1,13 +1,13 @@
 package matt.auto
 
-import matt.kbuild.allStdOutAndStdErr
 import matt.klib.commons.isNewMac
-import matt.kbuild.proc
 import matt.klib.commons.FLOW_FOLDER
 import matt.klib.commons.get
 import matt.kjlib.log.exceptionFolder
+import matt.kjlib.shell.allStdOutAndStdErr
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
+import matt.kjlib.shell.proc
 import matt.kjlib.socket.InterAppInterface
 import matt.klib.log.warn
 import java.awt.Desktop

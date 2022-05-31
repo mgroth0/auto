@@ -1,6 +1,5 @@
 package matt.auto
 
-import matt.klib.commons.isNewMac
 import matt.klib.commons.FLOW_FOLDER
 import matt.klib.commons.get
 import matt.kjlib.log.exceptionFolder
@@ -9,10 +8,12 @@ import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.proc
 import matt.kjlib.socket.InterAppInterface
+import matt.klib.commons.thisMachine
+import matt.klib.file.MFile
 import matt.klib.log.warn
+import matt.klib.sys.NEW_MAC
 import java.awt.Desktop
 import java.io.BufferedWriter
-import java.io.File
 import java.net.URI
 import java.net.URL
 import java.util.Base64
@@ -39,13 +40,13 @@ fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): Proce
   )
 }
 
-fun File.openInIntelliJ() = thread { println(IntelliJNavAction(absolutePath).start().allStdOutAndStdErr()) }
-fun File.openInFinder(): Unit = if (this.isDirectory) desktop.browse(this.toURI()) else this.parentFile.openInFinder()
-fun File.openInSublime() = SublimeText.open(this)
-fun File.subl() = openInSublime()
+fun MFile.openInIntelliJ() = thread { println(IntelliJNavAction(absolutePath).start().allStdOutAndStdErr()) }
+fun MFile.openInFinder(): Unit = if (this.isDirectory) desktop.browse(this.toURI()) else this.parentFile.openInFinder()
+fun MFile.openInSublime() = SublimeText.open(this)
+fun MFile.subl() = openInSublime()
 
 @JvmName("subl1")
-fun subl(file: File) = file.subl()
+fun subl(file: MFile) = file.subl()
 
 fun URL.open() = InterAppInterface["webd"].open(this.toString())
 
@@ -129,22 +130,22 @@ fun interactiveOsascript(script: String, compiled: Boolean = true): Pair<Buffere
 
 
 object SublimeText {
-  fun open(file: File) {
-	val subl = if (isNewMac) "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" else "/usr/local/bin/subl"
+  fun open(file: MFile) {
+	val subl = if (thisMachine == NEW_MAC) "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" else "/usr/local/bin/subl"
 	exec(null, subl, file.absolutePath)
   }
 }
 
 
 object Finder {
-  fun open(f: File) = Desktop.getDesktop().open(if (f.isDirectory) f else f.parentFile)
-  fun open(f: String) = open(File(f))
+  fun open(f: MFile) = Desktop.getDesktop().open(if (f.isDirectory) f else f.parentFile)
+  fun open(f: String) = open(MFile(f))
 }
 
 class WebBrowser(val name: String) {
   fun open(u: URL) = exec(null, "open", "-a", name, u.toString())
   fun open(u: String) = open(URI(u).toURL())
-  fun open(f: File) = open(f.toURI().toURL())
+  fun open(f: MFile) = open(f.toURI().toURL())
 }
 
 val VIVALDI = WebBrowser("Vivaldi")

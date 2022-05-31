@@ -41,7 +41,7 @@ fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): Proce
 }
 
 fun MFile.openInIntelliJ() = thread { println(IntelliJNavAction(absolutePath).start().allStdOutAndStdErr()) }
-fun MFile.openInFinder(): Unit = if (this.isDirectory) desktop.browse(this.toURI()) else this.parentFile.openInFinder()
+fun MFile.openInFinder(): Unit = if (this.isDirectory) desktop.browse(this.toURI()) else this.parentFile!!.openInFinder()
 fun MFile.openInSublime() = SublimeText.open(this)
 fun MFile.subl() = openInSublime()
 

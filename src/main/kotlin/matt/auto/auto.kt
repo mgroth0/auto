@@ -8,6 +8,9 @@ import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.proc
 import matt.kjlib.socket.InterAppInterface
+import matt.klib.commons.APPLESCRIPT_FOLDER
+import matt.klib.commons.BIN_FOLDER
+import matt.klib.commons.plus
 import matt.klib.commons.thisMachine
 import matt.klib.file.MFile
 import matt.klib.log.warn
@@ -29,7 +32,7 @@ fun writeErrReport(name: String, report: String) {
 
 fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): ProcessBuilder {
   val args = mutableListOf(
-	FLOW_FOLDER!!.resolve("bin/ide_open").absolutePath, file
+  (BIN_FOLDER + "ide_open").absolutePath, file
   )
   if (linenum_or_searchstring != null) {
 	val encoded = Base64.getUrlEncoder().encodeToString(linenum_or_searchstring.toString().toByteArray())
@@ -72,7 +75,7 @@ fun kmscript(
   println("not sure what to do with nonblocking in kotlin")
 }
 
-val APPLESCRIPT_FOLDER = FLOW_FOLDER!!["applescript"].apply { mkdirs() }
+
 fun compileAndOrRunApplescript(name: String, vararg args: String): String {
   val scpt = APPLESCRIPT_FOLDER["$name.scpt"]
   println(

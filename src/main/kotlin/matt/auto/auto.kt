@@ -1,6 +1,5 @@
 package matt.auto
 
-import matt.klib.commons.FLOW_FOLDER
 import matt.klib.commons.get
 import matt.kjlib.log.exceptionFolder
 import matt.kjlib.shell.allStdOutAndStdErr
@@ -9,11 +8,10 @@ import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.proc
 import matt.kjlib.socket.InterAppInterface
 import matt.klib.commons.APPLESCRIPT_FOLDER
-import matt.klib.commons.BIN_FOLDER
-import matt.klib.commons.plus
 import matt.klib.commons.thisMachine
 import matt.klib.file.MFile
 import matt.klib.log.warn
+import matt.klib.str.taball
 import matt.klib.sys.NEW_MAC
 import java.awt.Desktop
 import java.io.BufferedWriter
@@ -30,21 +28,23 @@ fun writeErrReport(name: String, report: String) {
   SublimeText.open(file)
 }
 
-fun IntelliJNavAction(file: String, linenum_or_searchstring: Any? = null): ProcessBuilder {
-  val args = mutableListOf(
-  (BIN_FOLDER + "ide_open").absolutePath, file
-  )
+fun openInIntelliJ(file: String, linenum_or_searchstring: Any? = null) {
+  var arg = file
+
   if (linenum_or_searchstring != null) {
 	val encoded = Base64.getUrlEncoder().encodeToString(linenum_or_searchstring.toString().toByteArray())
-	args[1] = args[1] + ":${encoded}"
+	arg += ":${encoded}"
   }
-  return ProcessBuilder(
-	args
-  )
+  ideOpen(arg)
+  /*  return ProcessBuilder(
+	  args
+	)*/
 }
 
-fun MFile.openInIntelliJ() = thread { println(IntelliJNavAction(absolutePath).start().allStdOutAndStdErr()) }
-fun MFile.openInFinder(): Unit = if (this.isDirectory) desktop.browse(this.toURI()) else this.parentFile!!.openInFinder()
+fun MFile.openInIntelliJ() = thread { openInIntelliJ(absolutePath) }
+fun MFile.openInFinder(): Unit =
+  if (this.isDirectory) desktop.browse(this.toURI()) else this.parentFile!!.openInFinder()
+
 fun MFile.openInSublime() = SublimeText.open(this)
 fun MFile.subl() = openInSublime()
 
@@ -134,7 +134,8 @@ fun interactiveOsascript(script: String, compiled: Boolean = true): Pair<Buffere
 
 object SublimeText {
   fun open(file: MFile) {
-	val subl = if (thisMachine == NEW_MAC) "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" else "/usr/local/bin/subl"
+	val subl =
+	  if (thisMachine == NEW_MAC) "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" else "/usr/local/bin/subl"
 	exec(null, subl, file.absolutePath)
   }
 }
@@ -162,4 +163,23 @@ fun activateByPid(pid: Any) = thread {
         end tell
 """
   )
+}
+
+
+fun ideOpen(weirdArg: String) {
+  val pids =
+	ProcessBuilder("/bin/bash", "-c", "/bin/ps -A | /usr/bin/grep idea | /usr/bin/awk \'{print $1}\'")
+	  .start()
+	  .inputStream
+	  .bufferedReader()
+	  .readText()
+	  .lines()
+	  .filter { it.isNotBlank() }
+	  .map { it.toInt() }
+  taball("pids", pids)
+  pids.forEach {
+	/*in old zsh script for some reason I only activated the first one or something. Not sure why.*/
+	activateByPid(it)
+  }
+  InterAppInterface["ide"].open(weirdArg)
 }

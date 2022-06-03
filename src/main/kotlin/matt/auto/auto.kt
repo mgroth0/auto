@@ -1,13 +1,12 @@
 package matt.auto
 
-import matt.klib.commons.get
 import matt.kjlib.log.exceptionFolder
-import matt.kjlib.shell.allStdOutAndStdErr
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.proc
 import matt.kjlib.socket.InterAppInterface
 import matt.klib.commons.APPLESCRIPT_FOLDER
+import matt.klib.commons.get
 import matt.klib.commons.thisMachine
 import matt.klib.file.MFile
 import matt.klib.log.warn
@@ -183,3 +182,5 @@ fun ideOpen(weirdArg: String) {
   }
   InterAppInterface["ide"].open(weirdArg)
 }
+
+const val SUBL = "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"

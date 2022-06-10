@@ -19,6 +19,8 @@ import java.net.URL
 import java.util.Base64
 import kotlin.concurrent.thread
 
+class YesUsingAuto()
+
 fun writeErrReport(name: String, report: String) {
   exceptionFolder.mkdirs()
   val file = exceptionFolder["$name.txt"]

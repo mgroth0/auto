@@ -19,6 +19,11 @@ import java.net.URL
 import java.util.Base64
 import kotlin.concurrent.thread
 
+
+class Action(val name: String, val op: () -> Unit) {
+
+}
+
 class YesUsingAuto()
 
 fun writeErrReport(name: String, report: String) {

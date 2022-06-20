@@ -20,7 +20,7 @@ import java.util.Base64
 import kotlin.concurrent.thread
 
 
-class Action(val name: String, val op: () -> Unit) {
+class Action(val name: String, val op: ()->Unit) {
 
 }
 
@@ -191,3 +191,25 @@ fun ideOpen(weirdArg: String) {
 }
 
 const val SUBL = "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
+
+
+fun MFile.actions() = listOf(
+  Action("open in intelliJ") {
+	openInIntelliJ()
+  },
+  Action("open in Sublime") {
+	openInSublime()
+  },
+  Action("open in finder") {
+	matt.auto.Finder.open(this)
+  },
+  Action("open in chrome") {
+	matt.auto.CHROME.open(this)
+  },
+  Action("open in vivaldi") {
+	matt.auto.VIVALDI.open(this)
+  },
+  Action("open with webd") {
+	java.net.URL(this.toURI().toURL().toString()).open()
+  },
+)

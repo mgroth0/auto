@@ -1,11 +1,11 @@
 package matt.auto
 
-import matt.kjlib.log.exceptionFolder
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.proc
 import matt.kjlib.socket.InterAppInterface
 import matt.klib.commons.APPLESCRIPT_FOLDER
+import matt.klib.commons.exceptionFolder
 import matt.klib.commons.get
 import matt.klib.commons.thisMachine
 import matt.klib.file.MFile

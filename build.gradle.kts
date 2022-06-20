@@ -5,5 +5,5 @@ implementations(
   projects.kj.kjlib.kjlibShell,
   projects.kj.kjlib,
   projects.k.key,
-  projects.kj.async
+  projects.k.async
 )

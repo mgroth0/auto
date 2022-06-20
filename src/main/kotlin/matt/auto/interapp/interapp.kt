@@ -8,6 +8,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import matt.auto.activateByPid
+import matt.async.waitFor
 import matt.key.ACTIVATE
 import matt.key.ARE_YOU_RUNNING
 import matt.key.EXIT

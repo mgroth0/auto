@@ -4,9 +4,8 @@ import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.proc
 import matt.kjlib.socket.InterAppInterface
-import matt.klib.commons.APPLESCRIPT_FOLDER
-import matt.klib.commons.exceptionFolder
-import matt.klib.commons.get
+import matt.file.commons.APPLESCRIPT_FOLDER
+import matt.file.commons.exceptionFolder
 import matt.klib.commons.thisMachine
 import matt.file.ApplescriptFile
 import matt.file.CodeFile

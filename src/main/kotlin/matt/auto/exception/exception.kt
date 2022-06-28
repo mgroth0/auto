@@ -4,8 +4,7 @@ import matt.auto.SublimeText
 import matt.auto.exception.MyDefaultUncaughtExceptionHandler.ExceptionResponse.EXIT
 import matt.auto.exception.MyDefaultUncaughtExceptionHandler.ExceptionResponse.IGNORE
 import matt.kjlib.byte.MemReport
-import matt.klib.commons.LOG_FOLDER
-import matt.klib.commons.get
+import matt.file.commons.LOG_FOLDER
 import matt.file.MFile
 import java.lang.Thread.UncaughtExceptionHandler
 import kotlin.random.Random.Default.nextDouble

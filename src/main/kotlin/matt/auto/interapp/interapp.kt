@@ -17,11 +17,11 @@ import matt.kjlib.socket.MY_INTER_APP_SEM
 import matt.kjlib.socket.port
 import matt.kjlib.socket.reader.SocketReader
 import matt.kjlib.socket.reader.readTextBeforeTimeout
-import matt.klib.commons.VAL_JSON_FILE
+import matt.file.commons.VAL_JSON_FILE
 import matt.klib.constants.ValJson
 import matt.klib.lang.go
-import matt.klib.log.DefaultLogger
-import matt.klib.log.Logger
+import matt.file.log.DefaultLogger
+import matt.file.log.Logger
 import java.net.BindException
 import java.net.ServerSocket
 import java.net.Socket

@@ -229,3 +229,5 @@ fun MFile.open() {
 	is UnknownFile, is DSStoreFile, is Folder, is DataFile -> openInFinder()
   }
 }
+
+fun MFile.moveToTrash() = desktop.moveToTrash(this)

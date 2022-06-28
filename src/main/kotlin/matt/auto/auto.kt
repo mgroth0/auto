@@ -8,8 +8,14 @@ import matt.klib.commons.APPLESCRIPT_FOLDER
 import matt.klib.commons.exceptionFolder
 import matt.klib.commons.get
 import matt.klib.commons.thisMachine
+import matt.klib.file.ApplescriptFile
+import matt.klib.file.CodeFile
+import matt.klib.file.DSStoreFile
+import matt.klib.file.DataFile
+import matt.klib.file.Folder
 import matt.klib.file.JsonFile
 import matt.klib.file.MFile
+import matt.klib.file.ShellFile
 import matt.klib.file.mFile
 import matt.klib.file.UnknownFile
 import matt.klib.log.warn
@@ -220,7 +226,7 @@ fun MFile.actions() = listOf(
 
 fun MFile.open() {
   when (this) {
-	is JsonFile    -> openInSublime()
-	is UnknownFile -> openInFinder()
+	is JsonFile, is CodeFile                               -> openInSublime()
+	is UnknownFile, is DSStoreFile, is Folder, is DataFile -> openInFinder()
   }
 }

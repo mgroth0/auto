@@ -8,7 +8,10 @@ import matt.klib.commons.APPLESCRIPT_FOLDER
 import matt.klib.commons.exceptionFolder
 import matt.klib.commons.get
 import matt.klib.commons.thisMachine
+import matt.klib.file.JsonFile
 import matt.klib.file.MFile
+import matt.klib.file.mFile
+import matt.klib.file.UnknownFile
 import matt.klib.log.warn
 import matt.klib.str.taball
 import matt.klib.sys.NEW_MAC
@@ -148,8 +151,8 @@ object SublimeText {
 
 
 object Finder {
-  fun open(f: MFile) = Desktop.getDesktop().open(if (f.isDirectory) f else f.parentFile)
-  fun open(f: String) = open(MFile(f))
+  fun open(f: MFile): Unit = Desktop.getDesktop().open(if (f.isDirectory) f else f.parentFile)
+  fun open(f: String) = open(mFile(f))
 }
 
 class WebBrowser(val name: String) {
@@ -213,3 +216,11 @@ fun MFile.actions() = listOf(
 	java.net.URL(this.toURI().toURL().toString()).open()
   },
 )
+
+
+fun MFile.open() {
+  when (this) {
+	is JsonFile    -> openInSublime()
+	is UnknownFile -> openInFinder()
+  }
+}

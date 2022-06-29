@@ -13,6 +13,7 @@ import matt.file.DSStoreFile
 import matt.file.DataFile
 import matt.file.Folder
 import matt.file.JsonFile
+import matt.file.LogFile
 import matt.file.MFile
 import matt.file.ShellFile
 import matt.file.mFile
@@ -225,7 +226,7 @@ fun MFile.actions() = listOf(
 
 fun MFile.open() {
   when (this) {
-	is JsonFile, is CodeFile                               -> openInSublime()
+	is JsonFile, is CodeFile, is LogFile                   -> openInSublime()
 	is UnknownFile, is DSStoreFile, is Folder, is DataFile -> openInFinder()
   }
 }

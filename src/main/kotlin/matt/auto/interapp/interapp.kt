@@ -5,10 +5,10 @@ package matt.auto.interapp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
-import matt.auto.activateByPid
 import matt.async.waitFor
+import matt.auto.activateByPid
+import matt.file.log.DefaultLogger
+import matt.file.log.Logger
 import matt.key.ACTIVATE
 import matt.key.ARE_YOU_RUNNING
 import matt.key.EXIT
@@ -17,11 +17,7 @@ import matt.kjlib.socket.MY_INTER_APP_SEM
 import matt.kjlib.socket.port
 import matt.kjlib.socket.reader.SocketReader
 import matt.kjlib.socket.reader.readTextBeforeTimeout
-import matt.file.commons.VAL_JSON_FILE
-import matt.klib.constants.ValJson
 import matt.klib.lang.go
-import matt.file.log.DefaultLogger
-import matt.file.log.Logger
 import java.net.BindException
 import java.net.ServerSocket
 import java.net.Socket

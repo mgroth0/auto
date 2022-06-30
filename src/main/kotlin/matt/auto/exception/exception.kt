@@ -22,9 +22,18 @@ class MyDefaultUncaughtExceptionHandler(
   )->ExceptionResponse),
   val shutdown: (()->Unit)? = null,
 ): UncaughtExceptionHandler {
+
+  var gotOne = false
+
   override fun uncaughtException(t: Thread?, e: Throwable?) {
 
-	  e?.printStackTrace()
+	if (gotOne) {
+	  println("wow, got an error in the error handler")
+	  exitProcess(1)
+	}
+	gotOne = true
+
+	e?.printStackTrace()
 
 	/*dont delete until I find source of disappearing exceptions*/
 	println("in uncaughtException for $e")
@@ -68,6 +77,7 @@ class MyDefaultUncaughtExceptionHandler(
 		println("ok really exiting")
 		exitProcess(1)
 	  }
+
 	  IGNORE -> {
 		println("ignoring that exception")
 	  }

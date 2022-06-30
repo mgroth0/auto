@@ -1,6 +1,6 @@
 modtype = LIB
 apis(
-  project(":k:file")
+  ":k:file".auto()
 )
 implementations(
   projects.k.kjlib.kjlibSocket,

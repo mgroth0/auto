@@ -42,7 +42,7 @@ class MyDefaultUncaughtExceptionHandler(
 	exceptionFolder.mkdirs()
 
 
-	val exceptionFile = exceptionFolder["exception.txt"].getNextAndClearWhenMoreThan(100)
+	val exceptionFile = exceptionFolder.getNextSubIndexedFileWork("exception.txt", 100)
 
 
 

@@ -191,4 +191,4 @@ fun MFile.open() {
 
 fun MFile.moveToTrash() = desktop.moveToTrash(this)
 
-fun MFile.cpRF(target: MFile) = shell("cp", "-rf", absolutePath, target.absolutePath)
+fun MFile.copyTo(target: MFile) = shell("cp", "-rf", absolutePath, target.absolutePath)

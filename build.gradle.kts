@@ -7,7 +7,8 @@ implementations(
   projects.k.kjlib.shell,
   projects.k.kjlib,
   projects.k.key,
-  projects.k.async
+  projects.k.async,
+  dependencies.kotlin("reflect")
 )
 
 plugins {

@@ -16,6 +16,7 @@ import matt.file.commons.exceptionFolder
 import matt.file.mFile
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
+import matt.kjlib.shell.shell
 import matt.kjlib.socket.InterAppInterface
 import matt.klib.commons.thisMachine
 import matt.klib.log.warn
@@ -189,3 +190,5 @@ fun MFile.open() {
 }
 
 fun MFile.moveToTrash() = desktop.moveToTrash(this)
+
+fun MFile.cpRF(target: MFile) = shell("cp", "-rf", absolutePath, target.absolutePath)

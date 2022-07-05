@@ -193,4 +193,5 @@ fun MFile.moveToTrash() = desktop.moveToTrash(this)
 
 /*what a SHAM. This can take over 10 times as long as cp*/
 /*shadowJar.copyTo(dest, overwrite = true)*/
+/*REMINDER: I am using mac cp, not gnu copy (which who knows, might be slower) so --target-directory isn't an option. there may be an equiavalent flag but i could not find it*/
 fun MFile.copyToFast(target: MFile) = parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }

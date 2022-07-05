@@ -1,13 +1,6 @@
 package matt.auto
 
-import matt.kjlib.shell.exec
-import matt.kjlib.shell.execReturn
-import matt.kjlib.shell.proc
-import matt.kjlib.socket.InterAppInterface
-import matt.file.commons.APPLESCRIPT_FOLDER
-import matt.file.commons.exceptionFolder
-import matt.klib.commons.thisMachine
-import matt.file.ApplescriptFile
+import matt.auto.applescript.osascript
 import matt.file.CodeFile
 import matt.file.DSStoreFile
 import matt.file.DataFile
@@ -15,16 +8,20 @@ import matt.file.Folder
 import matt.file.JsonFile
 import matt.file.LogFile
 import matt.file.MFile
-import matt.file.ShellFile
 import matt.file.TxtFile
-import matt.file.mFile
 import matt.file.UnknownFile
 import matt.file.Zip
+import matt.file.commons.APPLESCRIPT_FOLDER
+import matt.file.commons.exceptionFolder
+import matt.file.mFile
+import matt.kjlib.shell.exec
+import matt.kjlib.shell.execReturn
+import matt.kjlib.socket.InterAppInterface
+import matt.klib.commons.thisMachine
 import matt.klib.log.warn
 import matt.klib.str.taball
 import matt.klib.sys.NEW_MAC
 import java.awt.Desktop
-import java.io.BufferedWriter
 import java.net.URI
 import java.net.URL
 import java.util.Base64
@@ -98,55 +95,13 @@ fun compileAndOrRunApplescript(name: String, vararg args: String): String {
   println(
 	"WARNING: eventually use a .json to track compile time with modification times, for now need to manually delete .scpt files to update"
   )
-  val aScript = APPLESCRIPT_FOLDER["$name.applescript"]
+  val aScript = APPLESCRIPT_FOLDER["$name.matt.auto.applescript.applescript"]
   if (!scpt.exists()) {
 	println("COMPILE:" + execReturn(null, "osacompile", "-o", scpt.absolutePath, aScript.absolutePath))
   }
-  return execReturn(null, "osascript", scpt.absolutePath, *args)
+  return execReturn(null, "matt.auto.applescript.osascript", scpt.absolutePath, *args)
 }
 
-@Suppress("unused")
-fun applescript(script: String, args: Array<String> = arrayOf(), compiled: Boolean = true, functions: String = "") =
-  osascript(script, args, compiled, functions = functions)
-
-fun osascript(
-  script: String,
-  args: Array<String> = arrayOf(),
-  compiled: Boolean = true,
-  functions: String = ""
-): String {
-  var realScript = "on run argv\n$script\nend run"
-  if (functions.isNotBlank()) {
-	realScript = realScript + "\n\n" + functions
-  }
-  if (compiled) {    /*var f = scptMap[realScript]
-	if (f == null) {
-	  val scpt = TEMP_DIR["scpt"].apply { mkdirs() }[]
-	  exec(null,"osacompile","-e",realScript,"-o")
-	}*/
-	return execReturn(null, "osascript", "-e", realScript, *args)
-  } else {
-	return execReturn(null, "osascript", "-e", realScript, *args)
-  }
-}
-
-fun interactiveOsascript(script: String, compiled: Boolean = true): Pair<BufferedWriter, Process> {
-  if (compiled) {    /*var f = scptMap[realScript]
-	if (f == null) {
-	  val scpt = TEMP_DIR["scpt"].apply { mkdirs() }[]
-	  exec(null,"osacompile","-e",realScript,"-o")
-	}*/
-	val p = proc(null, "bash", "-c", "osascript 3<&0 <<'APPLESCRIPT'")
-	val writer = p.outputStream.bufferedWriter()
-	writer.write("$script\nAPPLESCRIPT")
-	return writer to p
-  } else {
-	val p = proc(null, "bash", "-c", "osascript 3<&0 <<'APPLESCRIPT'")
-	val writer = p.outputStream.bufferedWriter()
-	writer.write("$script\nAPPLESCRIPT")
-	return writer to p
-  }
-}
 
 
 object SublimeText {
@@ -212,16 +167,16 @@ fun MFile.actions() = listOf(
 	openInSublime()
   },
   Action("open in finder") {
-	matt.auto.Finder.open(this)
+	Finder.open(this)
   },
   Action("open in chrome") {
-	matt.auto.CHROME.open(this)
+	CHROME.open(this)
   },
   Action("open in vivaldi") {
-	matt.auto.VIVALDI.open(this)
+	VIVALDI.open(this)
   },
   Action("open with webd") {
-	java.net.URL(this.toURI().toURL().toString()).open()
+	URL(this.toURI().toURL().toString()).open()
   },
 )
 

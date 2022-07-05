@@ -9,3 +9,7 @@ implementations(
   projects.k.key,
   projects.k.async
 )
+
+plugins {
+  kotlin("plugin.serialization")
+}

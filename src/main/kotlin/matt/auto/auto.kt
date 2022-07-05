@@ -104,7 +104,6 @@ fun compileAndOrRunApplescript(name: String, vararg args: String): String {
 }
 
 
-
 object SublimeText {
   fun open(file: MFile) {
 	val subl =
@@ -191,4 +190,7 @@ fun MFile.open() {
 
 fun MFile.moveToTrash() = desktop.moveToTrash(this)
 
-fun MFile.copyTo(target: MFile) = shell("cp", "-rf", absolutePath, target.absolutePath)
+
+/*what a SHAM. This can take over 10 times as long as cp*/
+/*shadowJar.copyTo(dest, overwrite = true)*/
+fun MFile.copyToFast(target: MFile) = parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }

@@ -14,11 +14,13 @@ import matt.file.Zip
 import matt.file.commons.APPLESCRIPT_FOLDER
 import matt.file.commons.exceptionFolder
 import matt.file.mFile
+import matt.file.recursiveChildren
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.shell
 import matt.kjlib.socket.InterAppInterface
 import matt.klib.commons.thisMachine
+import matt.klib.lang.inlined
 import matt.klib.log.warn
 import matt.klib.str.taball
 import matt.klib.sys.NEW_MAC
@@ -195,3 +197,56 @@ fun MFile.moveToTrash() = desktop.moveToTrash(this)
 /*shadowJar.copyTo(dest, overwrite = true)*/
 /*REMINDER: I am using mac cp, not gnu copy (which who knows, might be slower) so --target-directory isn't an option. there may be an equiavalent flag but i could not find it*/
 fun MFile.copyToFast(target: MFile) = parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }
+
+
+
+
+fun jumpToKotlinSourceString(
+  rootProject: MFile,
+  s: String,
+  packageFilter: String?
+): Pair<MFile, Int>? {
+  println("matt.kjlib.jumpToKotlinSourceString:${s}:${packageFilter}")
+  val packFolder = packageFilter?.replace(".", "/")
+  var pair: Pair<MFile, Int>? = null
+  inlined {
+	rootProject["settings.gradle.kts"]
+	  .readLines()
+	  .asSequence()
+	  .filterNot { it.isBlank() }
+	  .map { it.trim() }
+	  .filterNot { it.startsWith("//") }
+	  .map { it.replace("include(\"", "").replace("\")", "") }
+	  .map { it.replace(":", "/") }
+	  .map { rootProject[it]["src"] }
+	  .toList().forEach search@{ src ->
+		println("searching source folder: $src")
+		src.recursiveChildren()
+		  .filter {
+			(packageFilter == null || packFolder!! in it.absolutePath)
+		  }
+		  .filter { maybekt ->
+			maybekt.extension == "kt"
+		  }
+		  .forEach kt@{ kt ->
+			print("searching ${kt}... ")
+			var linenum = 0 // I guess ide_open uses indices??
+			kt.bufferedReader().lines().use { lines ->
+			  for (line in lines) {
+				if (s in line) {
+				  println("found!")
+
+				  pair = kt to linenum
+				  return@inlined
+				}
+				linenum += 1
+
+			  }
+			}
+			println("not here.")
+		  }
+	  }
+  }
+  println("matt.kjlib.jumpToKotlinSourceString: dur:${System.currentTimeMillis()}ms worked?: ${pair != null}")
+  return pair
+}

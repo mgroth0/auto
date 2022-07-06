@@ -1,4 +1,3 @@
-modtype = LIB
 apis(
   ":k:file".auto()
 )

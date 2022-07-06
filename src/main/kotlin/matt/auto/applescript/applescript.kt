@@ -1,7 +1,8 @@
 package matt.auto.applescript
 
 import kotlinx.serialization.Serializable
-import matt.kjlib.shell.execReturn
+import matt.kjlib.shell.ExecReturner
+import matt.kjlib.shell.Shell
 import matt.kjlib.shell.proc
 import java.io.BufferedWriter
 import java.net.URL
@@ -11,19 +12,31 @@ import kotlin.reflect.full.createInstance
 @Suppress("unused") fun applescript(script: String, args: Array<String> = arrayOf(), functions: String = "") =
   osascript(script, args, functions = functions)
 
+
 fun osascript(
   script: String,
   args: Array<String> = arrayOf(),
-  functions: String = "",
-  verbose: Boolean = false
-): String {
-  var realScript = "on run argv\n$script\nend run"
+  functions: String = ""
+) = osascript(ExecReturner, script, args, functions)
 
+fun <R> osascript(
+  shell: Shell<R>,
+  script: String,
+  args: Array<String> = arrayOf(),
+  functions: String = ""
+): R {
+  val realScript = wrapOsascript(script = script, functions = functions)
+  return shell.osascriptE(realScript, *args)
+}
+
+fun <R> Shell<R>.osascriptE(script: String, vararg args: String): R = sendCommand("osascript", "-e", script, *args)
+
+private fun wrapOsascript(script: String, functions: String = ""): String {
+  var realScript = "on run argv\n$script\nend run"
   if (functions.isNotBlank()) {
 	realScript = realScript + "\n\n" + functions
   }
-
-  return execReturn(null, "osascript", "-e", realScript, *args, verbose = verbose)
+  return realScript
 }
 
 fun interactiveOsascript(script: String): Pair<BufferedWriter, Process> {
@@ -35,6 +48,7 @@ fun interactiveOsascript(script: String): Pair<BufferedWriter, Process> {
 
 @DslMarker annotation class AppleScriptDSL
 
+@AppleScriptDSL
 sealed class AppleScriptElement {
   val script get() = scriptLines.joinToString(separator = "\n")
   val scriptLines = mutableListOf<String>()
@@ -46,8 +60,20 @@ sealed class AppleScriptElement {
 	}
 	scriptLines += "end repeat"
   }
-  fun delay(secs: Int) {
-	scriptLines += "delay ${secs}"
+  inline fun <reified A: AppleScriptElement> A.repeatWhile(condition: String, op: A.()->Unit) {
+	scriptLines += "repeat while $condition"
+	scriptLines += A::class.createInstance().let {
+	  it.op()
+	  it.scriptLines
+	}
+	scriptLines += "end repeat"
+  }
+
+  fun delay(secs: Number) {
+	scriptLines += "delay $secs"
+  }
+  fun doShellScript(script: String) {
+	scriptLines += "do shell script \"$script\""
   }
 }
 
@@ -127,7 +153,7 @@ class Spotify: AppleScriptApplication("Spotify") {
 	}
   var shuffling: Boolean?
 	get() {
-	  scriptLines += "get shuffling"
+	  scriptLines += "log shuffling as text" /*GOES TO ERR!*/
 	  return null
 	}
 	set(value) {
@@ -135,7 +161,7 @@ class Spotify: AppleScriptApplication("Spotify") {
 	}
   var repeating: Boolean?
 	get() {
-	  scriptLines += "get repeating"
+	  scriptLines += "log repeating as text" /*GOES TO ERR!*/
 	  return null
 	}
 	set(value) {

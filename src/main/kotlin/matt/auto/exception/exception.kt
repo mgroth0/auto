@@ -3,9 +3,9 @@ package matt.auto.exception
 import matt.auto.SublimeText
 import matt.auto.exception.MyDefaultUncaughtExceptionHandler.ExceptionResponse.EXIT
 import matt.auto.exception.MyDefaultUncaughtExceptionHandler.ExceptionResponse.IGNORE
-import matt.kjlib.byte.MemReport
 import matt.file.commons.LOG_FOLDER
 import matt.file.MFile
+import matt.kjlib.weak.MemReport
 import java.lang.Thread.UncaughtExceptionHandler
 import kotlin.random.Random.Default.nextDouble
 import kotlin.system.exitProcess

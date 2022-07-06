@@ -1,12 +1,14 @@
 apis(
   ":k:file".auto()
 )
+implementations {
+  kjlibSocket
+  kjlibShell
+  kjlib
+  key
+  async
+}
 implementations(
-  projects.k.kjlib.socket,
-  projects.k.kjlib.shell,
-  projects.k.kjlib,
-  projects.k.key,
-  projects.k.async,
   dependencies.kotlin("reflect")
 )
 

@@ -12,9 +12,13 @@ import kotlin.reflect.full.createInstance
   osascript(script, args, functions = functions)
 
 fun osascript(
-  script: String, args: Array<String> = arrayOf(), functions: String = "", verbose: Boolean = false
+  script: String,
+  args: Array<String> = arrayOf(),
+  functions: String = "",
+  verbose: Boolean = false
 ): String {
   var realScript = "on run argv\n$script\nend run"
+
   if (functions.isNotBlank()) {
 	realScript = realScript + "\n\n" + functions
   }
@@ -34,6 +38,17 @@ fun interactiveOsascript(script: String): Pair<BufferedWriter, Process> {
 sealed class AppleScriptElement {
   val script get() = scriptLines.joinToString(separator = "\n")
   val scriptLines = mutableListOf<String>()
+  inline fun <reified A: AppleScriptElement> A.repeat(times: Int, op: A.()->Unit) {
+	scriptLines += "repeat $times times"
+	scriptLines += A::class.createInstance().let {
+	  it.op()
+	  it.scriptLines
+	}
+	scriptLines += "end repeat"
+  }
+  fun delay(secs: Int) {
+	scriptLines += "delay ${secs}"
+  }
 }
 
 @AppleScriptDSL
@@ -110,7 +125,26 @@ class Spotify: AppleScriptApplication("Spotify") {
 	get() {
 	  scriptLines += "previous track"
 	}
+  var shuffling: Boolean?
+	get() {
+	  scriptLines += "get shuffling"
+	  return null
+	}
+	set(value) {
+	  scriptLines += "set shuffling to $value"
+	}
+  var repeating: Boolean?
+	get() {
+	  scriptLines += "get repeating"
+	  return null
+	}
+	set(value) {
+	  scriptLines += "set repeating to $value"
+	}
 }
+
+
+enum class PlayerState { stopped, playing, paused }
 
 
 private val TO_RECYCLE = """

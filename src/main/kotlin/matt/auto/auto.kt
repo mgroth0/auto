@@ -1,5 +1,6 @@
 package matt.auto
 
+import matt.auto.applescript.applescript
 import matt.auto.applescript.osascript
 import matt.file.CodeFile
 import matt.file.DSStoreFile
@@ -249,4 +250,18 @@ fun jumpToKotlinSourceString(
   }
   println("matt.kjlib.jumpToKotlinSourceString: dur:${System.currentTimeMillis()}ms worked?: ${pair != null}")
   return pair
+}
+
+
+
+fun markTrashEmailsAsRead() {
+  applescript(
+	"""
+	tell application "Mail"
+		--	check for new mail
+		--	return first item of messages of mailbox "Trash" of account "Google"
+		set read status of messages of mailbox "Trash" of account "Google" to true
+	end tell
+  """.trimIndent()
+  )
 }

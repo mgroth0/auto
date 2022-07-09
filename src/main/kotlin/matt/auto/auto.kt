@@ -32,7 +32,7 @@ import java.util.Base64
 import kotlin.concurrent.thread
 
 
-class Action(val name: String, val op: ()->Unit) {
+class Action(val name: String, val icon: String? = null, val op: ()->Unit) {
 
 }
 
@@ -169,7 +169,7 @@ fun MFile.actions() = listOf(
   Action("open in Sublime") {
 	openInSublime()
   },
-  Action("open in finder") {
+  Action("open in finder", icon = "finder") {
 	Finder.open(this)
   },
   Action("open in chrome") {
@@ -197,9 +197,8 @@ fun MFile.moveToTrash() = desktop.moveToTrash(this)
 /*what a SHAM. This can take over 10 times as long as cp*/
 /*shadowJar.copyTo(dest, overwrite = true)*/
 /*REMINDER: I am using mac cp, not gnu copy (which who knows, might be slower) so --target-directory isn't an option. there may be an equiavalent flag but i could not find it*/
-fun MFile.copyToFast(target: MFile) = parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }
-
-
+fun MFile.copyToFast(target: MFile) =
+  parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }
 
 
 fun jumpToKotlinSourceString(
@@ -251,7 +250,6 @@ fun jumpToKotlinSourceString(
   println("matt.kjlib.jumpToKotlinSourceString: dur:${System.currentTimeMillis()}ms worked?: ${pair != null}")
   return pair
 }
-
 
 
 fun markTrashEmailsAsRead() {

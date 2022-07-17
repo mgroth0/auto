@@ -71,7 +71,7 @@ fun subl(file: MFile) = file.subl()
 
 fun URL.open() = InterAppInterface["webd"].open(this.toString())
 
-val desktop: Desktop = Desktop.getDesktop()
+val desktop: Desktop by lazy { Desktop.getDesktop() }
 
 @Suppress("unused")
 fun kmscript(

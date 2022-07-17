@@ -71,6 +71,7 @@ fun subl(file: MFile) = file.subl()
 
 fun URL.open() = InterAppInterface["webd"].open(this.toString())
 
+/*must be lazy bc this can throw an error if process is headless*/
 val desktop: Desktop by lazy { Desktop.getDesktop() }
 
 @Suppress("unused")

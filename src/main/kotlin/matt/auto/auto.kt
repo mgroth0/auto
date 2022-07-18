@@ -19,11 +19,15 @@ import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.shell
 import matt.kjlib.socket.InterAppInterface
+import matt.klib.commons.WINDOWS_CMD_BASH_PREFIX
 import matt.klib.commons.thisMachine
 import matt.klib.lang.inlined
 import matt.klib.log.warn
 import matt.klib.str.taball
 import matt.klib.sys.NEW_MAC
+import matt.klib.sys.Unix
+import matt.klib.sys.Windows
+import matt.klib.todo
 import java.awt.Desktop
 import java.net.URI
 import java.net.URL
@@ -198,8 +202,14 @@ fun MFile.moveToTrash() = desktop.moveToTrash(this)
 /*what a SHAM. This can take over 10 times as long as cp*/
 /*shadowJar.copyTo(dest, overwrite = true)*/
 /*REMINDER: I am using mac cp, not gnu copy (which who knows, might be slower) so --target-directory isn't an option. there may be an equiavalent flag but i could not find it*/
-fun MFile.copyToFast(target: MFile) =
-  parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }
+fun MFile.copyToFast(target: MFile): String {
+  todo("enforce having shell functions that are multiplatform")
+  return when (thisMachine) {
+	is Unix    -> parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }
+	is Windows -> parentFile!!.mkdirs().run { shell(*WINDOWS_CMD_BASH_PREFIX,"cp", "-rf", absolutePath, target.absolutePath) }
+  }
+
+}
 
 
 fun jumpToKotlinSourceString(

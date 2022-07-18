@@ -14,6 +14,7 @@ import matt.file.Zip
 import matt.file.commons.APPLESCRIPT_FOLDER
 import matt.file.commons.exceptionFolder
 import matt.file.mFile
+import matt.file.makeFileSeparatorsCompatibleWith
 import matt.file.recursiveChildren
 import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
@@ -206,7 +207,14 @@ fun MFile.copyToFast(target: MFile): String {
   todo("enforce having shell functions that are multiplatform")
   return when (thisMachine) {
 	is Unix    -> parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }
-	is Windows -> parentFile!!.mkdirs().run { shell(*wrapWindowsBashCmd("cp", "-rf", absolutePath, target.absolutePath)) }
+	is Windows -> parentFile!!.mkdirs().run {
+	  shell(
+		*wrapWindowsBashCmd(
+		  "cp", "-rf", absolutePath.makeFileSeparatorsCompatibleWith(NEW_MAC),
+		  target.absolutePath.makeFileSeparatorsCompatibleWith(NEW_MAC)
+		)
+	  )
+	}
   }
 }
 

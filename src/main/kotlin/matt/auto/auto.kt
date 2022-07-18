@@ -19,8 +19,8 @@ import matt.kjlib.shell.exec
 import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.shell
 import matt.kjlib.socket.InterAppInterface
-import matt.klib.commons.WINDOWS_CMD_BASH_PREFIX
 import matt.klib.commons.thisMachine
+import matt.klib.commons.wrapWindowsBashCmd
 import matt.klib.lang.inlined
 import matt.klib.log.warn
 import matt.klib.str.taball
@@ -206,9 +206,8 @@ fun MFile.copyToFast(target: MFile): String {
   todo("enforce having shell functions that are multiplatform")
   return when (thisMachine) {
 	is Unix    -> parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }
-	is Windows -> parentFile!!.mkdirs().run { shell(*WINDOWS_CMD_BASH_PREFIX,"cp", "-rf", absolutePath, target.absolutePath) }
+	is Windows -> parentFile!!.mkdirs().run { shell(*wrapWindowsBashCmd("cp", "-rf", absolutePath, target.absolutePath)) }
   }
-
 }
 
 

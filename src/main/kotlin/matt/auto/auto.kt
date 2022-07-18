@@ -17,7 +17,6 @@ import matt.file.mFile
 import matt.file.makeFileSeparatorsCompatibleWith
 import matt.file.recursiveChildren
 import matt.kjlib.shell.exec
-import matt.kjlib.shell.execReturn
 import matt.kjlib.shell.shell
 import matt.kjlib.socket.InterAppInterface
 import matt.klib.commons.thisMachine
@@ -106,9 +105,9 @@ fun compileAndOrRunApplescript(name: String, vararg args: String): String {
   )
   val aScript = APPLESCRIPT_FOLDER["$name.matt.auto.applescript.applescript"]
   if (!scpt.exists()) {
-	println("COMPILE:" + execReturn(null, "osacompile", "-o", scpt.absolutePath, aScript.absolutePath))
+	println("COMPILE:" + shell("osacompile", "-o", scpt.absolutePath, aScript.absolutePath))
   }
-  return execReturn(null, "matt.auto.applescript.osascript", scpt.absolutePath, *args)
+  return shell("matt.auto.applescript.osascript", scpt.absolutePath, *args)
 }
 
 

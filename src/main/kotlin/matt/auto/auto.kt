@@ -3,12 +3,11 @@ package matt.auto
 import matt.auto.applescript.applescript
 import matt.auto.applescript.osascript
 import matt.file.CodeFile
-import matt.file.DSStoreFile
 import matt.file.DataFile
 import matt.file.Folder
-import matt.file.JsonFile
 import matt.file.LogFile
 import matt.file.MFile
+import matt.file.MarkupLanguageFile
 import matt.file.TxtFile
 import matt.file.UnknownFile
 import matt.file.Zip
@@ -187,8 +186,9 @@ fun MFile.actions() = listOf(
 
 fun MFile.open() {
   when (this) {
-	is JsonFile, is CodeFile, is LogFile, is TxtFile               -> openInSublime()
-	is UnknownFile, is DSStoreFile, is Folder, is DataFile, is Zip -> openInFinder()
+	is DataFile                                                -> if (binary) openInFinder() else openInSublime()
+	is CodeFile, is LogFile, is TxtFile, is MarkupLanguageFile -> openInSublime()
+	is UnknownFile, is Folder, is Zip                          -> openInFinder()
   }
 }
 

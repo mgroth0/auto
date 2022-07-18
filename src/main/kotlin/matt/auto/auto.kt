@@ -206,8 +206,8 @@ fun MFile.moveToTrash() = desktop.moveToTrash(this)
 fun MFile.copyToFast(target: MFile): String {
   todo("enforce having shell functions that are multiplatform")
   return when (thisMachine) {
-	is Unix    -> parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }
-	is Windows -> parentFile!!.mkdirs().run {
+	is Unix    -> target.parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }
+	is Windows -> target.parentFile!!.mkdirs().run {
 	  shell(
 		*wrapWindowsBashCmd(
 		  "cp", "-rf", absolutePath.makeFileSeparatorsCompatibleWith(NEW_MAC),

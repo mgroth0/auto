@@ -60,6 +60,7 @@ sealed class AppleScriptElement {
 	}
 	scriptLines += "end repeat"
   }
+
   inline fun <reified A: AppleScriptElement> A.repeatWhile(condition: String, op: A.()->Unit) {
 	scriptLines += "repeat while $condition"
 	scriptLines += A::class.createInstance().let {
@@ -72,6 +73,7 @@ sealed class AppleScriptElement {
   fun delay(secs: Number) {
 	scriptLines += "delay $secs"
   }
+
   fun doShellScript(script: String) {
 	scriptLines += "do shell script \"$script\""
   }
@@ -79,13 +81,15 @@ sealed class AppleScriptElement {
 
 @AppleScriptDSL
 class AppleScript(op: AppleScript.()->Unit): AppleScriptElement() {
-  inline fun <reified A: AppleScriptApplication> tell(op: A.()->Unit) {
-	val app = A::class.createInstance()
+  inline fun <reified A: AppleScriptApplication> tell(app: A, op: A.()->Unit) {
 	scriptLines += "tell application \"${app.name}\""
 	app.op()
 	scriptLines += app.scriptLines
 	scriptLines += "end tell"
   }
+
+  @JvmName("tell1")
+  inline fun <reified A: AppleScriptApplication> tell(op: A.()->Unit) = tell(A::class.createInstance(), op)
 
   init {
 	op()
@@ -93,7 +97,8 @@ class AppleScript(op: AppleScript.()->Unit): AppleScriptElement() {
 }
 
 @AppleScriptDSL
-sealed class AppleScriptApplication(val name: String): AppleScriptElement() {
+abstract class AppleScriptApplication(name: String? = null): AppleScriptElement() {
+  val name = name ?: this::class.simpleName!!
   fun activate() {
 	scriptLines += "activate"
   }
@@ -120,7 +125,13 @@ class SpotifyPlaylistURI(override val id: String): SpotifyURI {
   override fun hashCode(): Int = id.hashCode()
 }
 
-class Spotify: AppleScriptApplication("Spotify") {
+
+class Finder: AppleScriptApplication()
+class SublimeText: AppleScriptApplication("Sublime Text")
+class Chrome: AppleScriptApplication("Google Chrome")
+class Vivaldi: AppleScriptApplication()
+
+class Spotify: AppleScriptApplication() {
   fun openLocation(location: URL) {
 	scriptLines += "open location \"$location\""
   }

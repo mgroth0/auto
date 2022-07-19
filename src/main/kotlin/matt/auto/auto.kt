@@ -1,5 +1,7 @@
 package matt.auto
 
+import matt.auto.applescript.AppleScript
+import matt.auto.applescript.AppleScriptApplication
 import matt.auto.applescript.applescript
 import matt.auto.applescript.osascript
 import matt.file.CodeFile
@@ -33,6 +35,8 @@ import java.net.URI
 import java.net.URL
 import java.util.Base64
 import kotlin.concurrent.thread
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 
 
 class Action(val name: String, val icon: String? = null, val op: ()->Unit) {
@@ -110,8 +114,15 @@ fun compileAndOrRunApplescript(name: String, vararg args: String): String {
   return shell("matt.auto.applescript.osascript", scpt.absolutePath, *args)
 }
 
+sealed class MacApp(val a: KClass<out AppleScriptApplication>) {
+  fun activate() = AppleScript {
+	tell(a.createInstance()) {
+	  activate()
+	}
+  }
+}
 
-object SublimeText {
+object SublimeText: MacApp(matt.auto.applescript.SublimeText::class) {
   fun open(file: MFile) {
 	val subl =
 	  if (thisMachine == NEW_MAC) "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" else "/usr/local/bin/subl"
@@ -120,19 +131,20 @@ object SublimeText {
 }
 
 
-object Finder {
+object Finder: MacApp(matt.auto.applescript.Finder::class) {
   fun open(f: MFile): Unit = Desktop.getDesktop().open(if (f.isDirectory) f else f.parentFile)
   fun open(f: String) = open(mFile(f))
 }
 
-class WebBrowser(val name: String) {
-  fun open(u: URL) = exec(null, "open", "-a", name, u.toString())
+
+class WebBrowser(a: KClass<out AppleScriptApplication>): MacApp(a) {
+  fun open(u: URL) = exec(null, "open", "-a", a.createInstance().name, u.toString())
   fun open(u: String) = open(URI(u).toURL())
   fun open(f: MFile) = open(f.toURI().toURL())
 }
 
-val VIVALDI = WebBrowser("Vivaldi")
-val CHROME = WebBrowser("Chrome")
+val VIVALDI = WebBrowser(matt.auto.applescript.Vivaldi::class)
+val CHROME = WebBrowser(matt.auto.applescript.Chrome::class)
 
 fun activateByPid(pid: Any) = thread {
   osascript(

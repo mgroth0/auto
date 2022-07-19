@@ -4,6 +4,7 @@ import matt.auto.applescript.AppleScript
 import matt.auto.applescript.AppleScriptApplication
 import matt.auto.applescript.applescript
 import matt.auto.applescript.osascript
+import matt.auto.applescript.runAppleScript
 import matt.file.CodeFile
 import matt.file.DataFile
 import matt.file.Folder
@@ -115,7 +116,7 @@ fun compileAndOrRunApplescript(name: String, vararg args: String): String {
 }
 
 sealed class MacApp(val a: KClass<out AppleScriptApplication>) {
-  fun activate() = AppleScript {
+  fun activate() = runAppleScript {
 	tell(a.createInstance()) {
 	  activate()
 	}

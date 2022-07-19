@@ -79,8 +79,11 @@ sealed class AppleScriptElement {
   }
 }
 
+fun runAppleScript(op: AppleScript.()->Unit) = osascript(AppleScript(op).script)
+
 @AppleScriptDSL
 class AppleScript(op: AppleScript.()->Unit): AppleScriptElement() {
+
   inline fun <reified A: AppleScriptApplication> tell(app: A, op: A.()->Unit) {
 	scriptLines += "tell application \"${app.name}\""
 	app.op()
@@ -90,6 +93,7 @@ class AppleScript(op: AppleScript.()->Unit): AppleScriptElement() {
 
   @JvmName("tell1")
   inline fun <reified A: AppleScriptApplication> tell(op: A.()->Unit) = tell(A::class.createInstance(), op)
+
 
   init {
 	op()

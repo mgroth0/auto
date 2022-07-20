@@ -5,7 +5,7 @@ import matt.auto.exception.MyDefaultUncaughtExceptionHandler.ExceptionResponse.E
 import matt.auto.exception.MyDefaultUncaughtExceptionHandler.ExceptionResponse.IGNORE
 import matt.file.commons.LOG_FOLDER
 import matt.file.MFile
-import matt.kjlib.weak.MemReport
+import matt.klib.weak.MemReport
 import java.lang.Thread.UncaughtExceptionHandler
 import kotlin.random.Random.Default.nextDouble
 import kotlin.system.exitProcess

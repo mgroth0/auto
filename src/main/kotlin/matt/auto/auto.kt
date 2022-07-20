@@ -222,7 +222,6 @@ fun MFile.moveToTrash() = desktop.moveToTrash(this)
 /*shadowJar.copyTo(dest, overwrite = true)*/
 /*REMINDER: I am using mac cp, not gnu copy (which who knows, might be slower) so --target-directory isn't an option. there may be an equiavalent flag but i could not find it*/
 fun MFile.copyToFast(target: MFile): String {
-  todo("enforce having shell functions that are multiplatform")
   return when (thisMachine) {
 	is Unix    -> target.parentFile!!.mkdirs().run { shell("cp", "-rf", absolutePath, target.absolutePath) }
 	is Windows -> target.parentFile!!.mkdirs().run {

@@ -77,6 +77,15 @@ sealed class AppleScriptElement {
   fun doShellScript(script: String) {
 	scriptLines += "do shell script \"$script\""
   }
+
+  fun <A: AppleScriptElement> A.`try`(op: A.()->Unit, onError: A.()->Unit) {
+	scriptLines += "try"
+	op()
+	scriptLines += "on error errTxt"
+	onError()
+	scriptLines += "end try"
+  }
+
 }
 
 fun runAppleScript(op: AppleScript.()->Unit) = osascript(AppleScript(op).script)
@@ -129,6 +138,9 @@ class SpotifyPlaylistURI(override val id: String): SpotifyURI {
   override fun hashCode(): Int = id.hashCode()
 }
 
+class SystemEvents: AppleScriptApplication("System Events") {
+
+}
 
 class Finder: AppleScriptApplication()
 class SublimeText: AppleScriptApplication("Sublime Text")

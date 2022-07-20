@@ -2,6 +2,7 @@ package matt.auto
 
 import matt.auto.applescript.AppleScript
 import matt.auto.applescript.AppleScriptApplication
+import matt.auto.applescript.SystemEvents
 import matt.auto.applescript.applescript
 import matt.auto.applescript.osascript
 import matt.auto.applescript.runAppleScript
@@ -148,13 +149,18 @@ val VIVALDI = WebBrowser(matt.auto.applescript.Vivaldi::class)
 val CHROME = WebBrowser(matt.auto.applescript.Chrome::class)
 
 fun activateByPid(pid: Any) = thread {
-  osascript(
-	"""
-        tell application "System Events"
-            set frontmost of the first process whose unix id is $pid to true
-        end tell
-"""
-  )
+  AppleScript {
+	tell<SystemEvents> {
+	  `try`(
+		op = {
+		  scriptLines += "set frontmost of the first process whose unix id is $pid to true"
+		},
+		onError = {
+		  scriptLines += "log \"probably could not find the pid\""
+		}
+	  )
+	}
+  }
 }
 
 

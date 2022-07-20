@@ -1,17 +1,12 @@
-apis(
-  ":k:file".auto()
-)
+apis {
+  file
+}
 implementations {
   kjlibSocket
   kjlibShell
-  kjlib
   key
   async
 }
 implementations(
   dependencies.kotlin("reflect")
 )
-
-plugins {
-  kotlin("plugin.serialization")
-}

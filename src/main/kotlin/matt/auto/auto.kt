@@ -40,9 +40,11 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
 
-class Action(val name: String, val icon: String? = null, val op: ()->Unit) {
-
-}
+class Action(
+  val name: String,
+  val icon: String? = null,
+  val op: ()->Unit
+)
 
 class YesUsingAuto()
 

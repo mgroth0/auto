@@ -4,7 +4,6 @@ import matt.auto.applescript.AppleScript
 import matt.auto.applescript.AppleScriptApplication
 import matt.auto.applescript.SystemEvents
 import matt.auto.applescript.applescript
-import matt.auto.applescript.osascript
 import matt.auto.applescript.runAppleScript
 import matt.file.CodeFile
 import matt.file.DataFile
@@ -31,7 +30,6 @@ import matt.klib.str.taball
 import matt.klib.sys.NEW_MAC
 import matt.klib.sys.Unix
 import matt.klib.sys.Windows
-import matt.klib.todo
 import java.awt.Desktop
 import java.net.URI
 import java.net.URL

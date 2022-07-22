@@ -5,6 +5,7 @@ import matt.auto.applescript.AppleScriptApplication
 import matt.auto.applescript.SystemEvents
 import matt.auto.applescript.applescript
 import matt.auto.applescript.runAppleScript
+import matt.file.BaseZip
 import matt.file.CodeFile
 import matt.file.DataFile
 import matt.file.Folder
@@ -13,7 +14,7 @@ import matt.file.MFile
 import matt.file.MarkupLanguageFile
 import matt.file.TxtFile
 import matt.file.UnknownFile
-import matt.file.Zip
+import matt.file.ZipFile
 import matt.file.commons.APPLESCRIPT_FOLDER
 import matt.file.commons.exceptionFolder
 import matt.file.mFile
@@ -209,7 +210,7 @@ fun MFile.open() {
   when (this) {
 	is DataFile                                                -> if (binary) openInFinder() else openInSublime()
 	is CodeFile, is LogFile, is TxtFile, is MarkupLanguageFile -> openInSublime()
-	is UnknownFile, is Folder, is Zip                          -> openInFinder()
+	is UnknownFile, is Folder, is BaseZip                      -> openInFinder()
   }
 }
 
